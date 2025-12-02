@@ -33,7 +33,7 @@ public class SalaDeEspera {
             }
         }
 
-        return cola.removeFirst(); 
+        return cola.removeFirst();
     }
 }
 
