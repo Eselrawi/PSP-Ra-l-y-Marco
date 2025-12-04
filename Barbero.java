@@ -1,7 +1,21 @@
-public class Barbero {
-    threadGrupo barberoGrupo = new threadGrupo("BarberoGrupo");
+public class Barbero implements Runnable {
+    private final int id;
+    private final SalaDeEspera sala;
+    private final int tiempoCorteMs;
 
-    thread barbero0Thread = new thread(barberoGrupo, new BarberoRunnable(), "Barbero0Thread");
-    thread barbero1Thread = new thread(barberoGrupo, new BarberoRunnable(), "Barbero1Thread");
-    
+    public Barbero(int id, SalaDeEspera sala, int tiempoCorteMs) {
+        this.id = id;
+        this.sala = sala;
+        this.tiempoCorteMs = tiempoCorteMs;
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            Cliente c = sala.siguienteCliente(); // duerme si no hay clientes
+            System.out.println("Barbero " + id + " atiende a Cliente " + c.getId());
+            try { Thread.sleep(tiempoCorteMs); } catch (InterruptedException e) { Thread.currentThread().interrupt(); break; }
+        }
+    }
 }
+

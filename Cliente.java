@@ -1,11 +1,23 @@
-// Cliente.java
-public class Cliente {
-    public static void main(String[] args) {
-        
-    
-    for (int i = 0; i < 5; i++) {
-        thread clienteThread = new thread(new ClienteRunnable(i), "ClienteThread-" + i);
+public class Cliente implements Runnable {
+    private final int id;
+    private final SalaDeEspera sala;
+
+    public Cliente(int id, SalaDeEspera sala) {
+        this.id = id;
+        this.sala = sala;
     }
-    
-}
+
+    @Override
+    public void run() {
+        System.out.println("Cliente " + id + " llega");
+        boolean sentado = sala.entrar(this);
+        if (!sentado) {
+            System.out.println("Cliente " + id + " se va (no tiene silla).");
+            return; // termina hilo
+        }
+        System.out.println("Cliente " + id + " esperando");
+        
+    }
+
+    public int getId() { return id; }
 }
