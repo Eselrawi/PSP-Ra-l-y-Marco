@@ -1,7 +1,7 @@
 public class Main {
      public static final int NUM_SILLAS = 5;
     public static final int NUM_BARBEROS = 2;
-    public static final int TIEMPO_CORTE_MS = 2000;
+    public static final int TIEMPO_CORTE_MS = 500;
     public static final int TIEMPO_LLEGADA_MS = 3000;
 
     public static void main(String[] args) {
