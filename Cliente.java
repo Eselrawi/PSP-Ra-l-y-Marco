@@ -1,23 +1,20 @@
+//Un cliente tiene que llegar intentar sentarse a es y si no puede se va
+
+
 public class Cliente implements Runnable {
     private final int id;
-    private final SalaDeEspera sala;
+    private final Barberia barberia;
 
-    public Cliente(int id, SalaDeEspera sala) {
+    public Cliente(int id, Barberia barberia) {
         this.id = id;
-        this.sala = sala;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Cliente " + id + " llega");
-        boolean sentado = sala.entrar(this);
-        if (!sentado) {
-            System.out.println("Cliente " + id + " se va (no tiene silla).");
-            return; // termina hilo
-        }
-        System.out.println("Cliente " + id + " esperando");
-        
+        this.barberia = barberia;
     }
 
     public int getId() { return id; }
+
+    @Override
+    public void run() {
+        barberia.llegaCliente(this);
+    }
 }
+
