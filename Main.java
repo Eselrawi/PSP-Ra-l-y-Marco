@@ -2,7 +2,7 @@
 public class Main {
     // CONFIGURACIÓN 
     public static final int NUM_BARBEROS = 2;
-    public static final int NUM_SILLAS = 3;
+    public static final int NUM_SILLAS = 1;
     public static final int TIEMPO_CORTE_MS = 3000;
     public static final int TIEMPO_LLEGADA_MS = 1000;
     public static final int TOTAL_CLIENTES = 0; // 0 es infinito

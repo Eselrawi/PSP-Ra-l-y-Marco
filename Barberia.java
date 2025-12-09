@@ -2,16 +2,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-/**
- * Clase que representa la barbería.
- * - Mantiene la cola de espera (FIFO) con capacidad limitada (sillas).
- * - Registra los barberos disponibles.
- * - Coordina llegada de clientes y petición de siguiente cliente por parte de los barberos.
- *
- * Métodos sincronizados para evitar condiciones de carrera entre hilos.
- */
-public class Barberia {
-    private final Queue<Cliente> salaDeEspera = new LinkedList<>();
+public class Barberia { //atributos
+    private final Queue<Cliente> salaDeEspera = new LinkedList<>(); //cola de clientes FIFO
     private final int capacidadSillas;
     private final List<Barbero> barberos = new LinkedList<>();
 
@@ -20,27 +12,27 @@ public class Barberia {
     }
 
     public synchronized void addBarbero(Barbero b) {
-        barberos.add(b);
+        barberos.add(b); 
+
     }
 
     //Llamada del cliente
     public synchronized void llegaCliente(Cliente c) {
         System.out.println("Cliente " + c.getId() + " llega");
 
-        // Si hay algún barbero libre en ese momento el cliente es  tiene que ser atendido.
-        // Solo imprimimos "atendido inmediatamente" si hay barbero libre ahora mismo.
+        
+        
         boolean hayBarberoLibre = false;
-        for (Barbero b : barberos) {
-            if (b.estaLibre()) {
+        for (Barbero b : barberos) { 
+            if (b.estaLibre()) {// Si hay algún barbero libre en ese momento el cliente tiene que ser atendido.
                 hayBarberoLibre = true;
                 break;
             }
         }
 
         if (hayBarberoLibre) {
-            // Aun así, el cliente entra en la cola: el barbero que esté libre lo cogerá inmediatamente.
-            salaDeEspera.offer(c);
-            System.out.println("Cliente " + c.getId() + " se sienta y será atendido inmediatamente si hay barbero libre");
+            salaDeEspera.offer(c); //Se añade el cliente a la cola
+            System.out.println("Cliente " + c.getId() + " se será atendido ahora mismo ");
             notifyAll(); // despierta a barberos dormidos
             return;
         }
@@ -63,7 +55,7 @@ public class Barberia {
     public synchronized Cliente siguienteCliente() {
         while (salaDeEspera.isEmpty()) {
             try {
-                // barbero duerme hasta que llegue un cliente
+                // barbero duerme hasta que llega un cliente
                 wait();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
