@@ -1,5 +1,3 @@
-//Un cliente tiene que llegar intentar sentarse a es y si no puede se va
-
 
 public class Cliente implements Runnable {
     private final int id;
@@ -10,11 +8,15 @@ public class Cliente implements Runnable {
         this.barberia = barberia;
     }
 
-    public int getId() { return id; }
+    public int getId() {
+        return id;
+    } // Cogemos su id con el constructor
 
     @Override
     public void run() {
-        barberia.llegaCliente(this);
+        barberia.llegaCliente(this); // Llama a la barberia
+        
     }
 }
+
 

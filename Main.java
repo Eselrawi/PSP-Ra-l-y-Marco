@@ -1,26 +1,55 @@
+
 public class Main {
-    public static void main(String[] args) {
+    // CONFIGURACIÓN 
+    public static final int NUM_BARBEROS = 2;
+    public static final int NUM_SILLAS = 3;
+    public static final int TIEMPO_CORTE_MS = 3000;
+    public static final int TIEMPO_LLEGADA_MS = 1000;
+    public static final int TOTAL_CLIENTES = 0; // 0 es infinito
+    // 
+    public static void main(String[] args) throws InterruptedException {
+        Barberia barberia = new Barberia(NUM_SILLAS);
 
-        Barberia barberia = new Barberia(2); // 2 sillas de espera
+        // Crear y arrancar barberos
+        Thread[] hilosBarbero = new Thread[NUM_BARBEROS];
+        for (int i = 0; i < NUM_BARBEROS; i++) {
+            Barbero b = new Barbero(i + 1, barberia, TIEMPO_CORTE_MS);
+            barberia.addBarbero(b);
+            hilosBarbero[i] = new Thread(b, "Barbero-" + (i + 1));
+            hilosBarbero[i].start();
+        }
 
-        // Crear barberos
-        Barbero b1 = new Barbero(1, barberia, 2000);
-        Barbero b2 = new Barbero(2, barberia, 2000);
+        // Generar clientes (infinito o finito según TOTAL_CLIENTES)
+        int id = 1;
+        if (TOTAL_CLIENTES <= 0) {
+            
+            while (true) {
+                Cliente c = new Cliente(id++, barberia);
+                new Thread(c, "Cliente-" + id).start();
+                Thread.sleep(TIEMPO_LLEGADA_MS);
+            }
+        } else {
+            
+            for (int i = 0; i < TOTAL_CLIENTES; i++) {
+                Cliente c = new Cliente(id++, barberia);
+                new Thread(c, "Cliente-" + id).start();
+                Thread.sleep(TIEMPO_LLEGADA_MS);
+            }
+            
+            // para que los barberos terminen y salir.
+            System.out.println("Todos los clientes generados. Esperando a que terminen los cortes...");
+            // Esperar algo razonable: número de clientes * tiempo corte / num barberos + margen
+            long espera = (long) (TOTAL_CLIENTES * TIEMPO_CORTE_MS / Math.max(1, NUM_BARBEROS)) + 5000;
+            Thread.sleep(espera);
 
-        barberia.addBarbero(b1);
-        barberia.addBarbero(b2);
-
-        // Hilos barberos
-        new Thread(b1).start();
-        new Thread(b2).start();
-
-        // Crear clientes cada 1 segundo
-        for (int i = 1; i <= 10; i++) {
-            Cliente c = new Cliente(i, barberia);
-            new Thread(c).start();
-
-            try { Thread.sleep(1000); } catch (InterruptedException ignored) {}
+            // Interrumpimos hilos barbero para terminar el programa limpiamente
+            for (Thread t : hilosBarbero) {
+                t.interrupt();
+            }
+            System.out.println("Main finaliza.");
         }
     }
 }
+
+
 
