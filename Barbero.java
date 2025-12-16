@@ -1,15 +1,10 @@
-/**
- * Barbero: hilo que atiende clientes.
- * - Pide siguiente cliente a la barbería (siguienteCliente())
- * - Si no hay clientes, se duerme dentro de siguienteCliente()
- * - Simula el corte con Thread.sleep(tiempoCorteMs)
- */
+
 public class Barbero implements Runnable {
     private final int id;
     private final Barberia barberia;
     private final int tiempoCorteMs;
     private volatile boolean libre = true; // indica si está libre (se lee desde otros hilos)
-
+//volatile hace que los cambios se vean inmediatamente
     public Barbero(int id, Barberia barberia, int tiempoCorteMs) {
         this.id = id;
         this.barberia = barberia;
@@ -26,14 +21,14 @@ public class Barbero implements Runnable {
 
     @Override
     public void run() {
-        while (!Thread.currentThread().isInterrupted()) {
-            Cliente cliente = barberia.siguienteCliente(); // duerme aquí si no hay clientes
+        while (!Thread.currentThread().isInterrupted()) { //el barbero esta trabajando hasta que se interrumpe el hilo
+            Cliente cliente = barberia.siguienteCliente(); // devuelve cliente si hay o duerme el barbero si no hay clientes
             if (cliente == null) {
-                // hilo interrumpido o barberia devolvió null
+                // hilo interrumpido 
                 break;
             }
 
-            // Marcar ocupado y atender
+            // barbero pasa a  ocupado y atiende
             libre = false;
             System.out.println("Barbero " + id + " atiende a Cliente " + cliente.getId());
 
@@ -45,7 +40,7 @@ public class Barbero implements Runnable {
             }
 
             System.out.println("Cliente " + cliente.getId() + " ha terminado con Barbero " + id);
-            // después del corte, la silla queda libre y el siguiente cliente (si hay) podrá sentarse/ser atendido
+            // después del corte, la silla queda libre y el siguiente cliente podrá ser atendido
             libre = true;
         }
         System.out.println("Barbero " + id + " finaliza su turno.");

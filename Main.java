@@ -5,8 +5,8 @@ public class Main {
     public static final int NUM_SILLAS = 1;
     public static final int TIEMPO_CORTE_MS = 3000;
     public static final int TIEMPO_LLEGADA_MS = 1000;
-    public static final int TOTAL_CLIENTES = 0; // 0 es infinito
-    // 
+    public static final int TOTAL_CLIENTES = 10; // 0 es infinito
+    
     public static void main(String[] args) throws InterruptedException {
         Barberia barberia = new Barberia(NUM_SILLAS);
 
@@ -38,15 +38,15 @@ public class Main {
             
             // para que los barberos terminen y salir.
             System.out.println("Todos los clientes generados. Esperando a que terminen los cortes...");
-            // Esperar algo razonable: número de clientes * tiempo corte / num barberos + margen
+            
             long espera = (long) (TOTAL_CLIENTES * TIEMPO_CORTE_MS / Math.max(1, NUM_BARBEROS)) + 5000;
             Thread.sleep(espera);
 
-            // Interrumpimos hilos barbero para terminar el programa limpiamente
+            // Interrumpimos hilos barbero para terminar el programa 
             for (Thread t : hilosBarbero) {
                 t.interrupt();
             }
-            System.out.println("Main finaliza.");
+            
         }
     }
 }

@@ -21,10 +21,10 @@ public class Barberia { //atributos
         System.out.println("Cliente " + c.getId() + " llega");
 
         
-        
+        //comprueba si hay barbero libre
         boolean hayBarberoLibre = false;
         for (Barbero b : barberos) { 
-            if (b.estaLibre()) {// Si hay algún barbero libre en ese momento el cliente tiene que ser atendido.
+            if (b.estaLibre()) {//el cliente sera atendido inmediatemente
                 hayBarberoLibre = true;
                 break;
             }
@@ -37,45 +37,38 @@ public class Barberia { //atributos
             return;
         }
 
-        // Si no hay barbero libre: comprobar sillas de espera
+        // no hay barbero libre: comprobar sillas de espera
         if (salaDeEspera.size() < capacidadSillas) {
             salaDeEspera.offer(c);
             System.out.println("Cliente " + c.getId() + " se sienta en la sala de espera.");
             notifyAll(); // avisar a barberos (si alguno duerme)
         } else {
-            System.out.println("Cliente " + c.getId() + " se va (no hay sillas).");
+            System.out.println("Cliente " + c.getId() + " se va (no hay sillas).");//si no hay silla se va
         }
     }
 
-    /**
-     * Llamado por un barbero que quiere atender al siguiente cliente.
-     * Si no hay clientes, el barbero espera (se duerme).
-     * Devuelve el siguiente cliente (FIFO).
-     */
+    
+    
+     
     public synchronized Cliente siguienteCliente() {
         while (salaDeEspera.isEmpty()) {
             try {
-                // barbero duerme hasta que llega un cliente
-                wait();
+        
+                wait(); // barbero duerme aqui hasta que llega un cliente
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 return null;
             }
         }
-        return salaDeEspera.poll(); // FIFO: removeFirst()
+        return salaDeEspera.poll(); // llega un cliente y se atiende en orden fifo
     }
 
-    /**
-     * Para depuración / pruebas: devuelve número actual de clientes esperando.
-     */
-    public synchronized int clientesEsperando() {
+   
+    public synchronized int clientesEsperando() { //clientes esperando
         return salaDeEspera.size();
     }
 
-    /**
-     * Para depuración / pruebas: devuelve capacidad de sillas.
-     */
-    public int getCapacidadSillas() {
+    public int getCapacidadSillas() { //sillas
         return capacidadSillas;
     }
 }
